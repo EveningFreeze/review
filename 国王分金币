@@ -1,0 +1,22 @@
+#include <iostream>
+using namespace std;
+int main()
+{
+	int day, coin = 0, k = 1;
+	cin >> day;
+	while (day > 0)
+	{
+		if (day >= k)
+		{
+			day -= k;
+			coin += k * k;
+			k++;
+		}
+		else
+		{
+			coin += day * k;
+			day -= k;
+		}
+	}
+	cout << coin;
+}

@@ -1,0 +1,38 @@
+#include <bits/stdc++.h>
+using namespace std;
+//定义常量N，表示最多可以处理的学生数量
+const int N = 1008;
+//定义结构体node，表示一个学生的信息
+struct node
+{
+	string name;//学生姓名
+	int a, b, c;//三门课成绩
+	int sum;//三门课成绩的总和
+	int num;//学生的编号（用于在总分相同时排序）
+}no[N];//定义一个结构体数组no，用于存储所有学生的信息
+//比较函数，用于sort排序
+bool cmp(node x, node y)
+{
+	if (x.sum == y.sum)//如果两个学生总分呢相同
+	{
+		return x.num < y.num;//按照编号从小到大排序
+	}
+	return x.sum > y.sum;//否则按照总分从大到小排序
+}
+int main()
+{
+	int n;
+	cin >> n;//输入学生数量
+	//读取每个学生的信息
+	for (int i = 1; i <= n; i++)
+	{   //输入学生姓名和三门课成绩
+		cin >> no[i].name >> no[i].a >> no[i].b >> no[i].c;
+		no[i].sum = no[i].a + no[i].b + no[i].c;//计算总分
+		no[i].num = i;//记录学生编号
+	}
+	//对学生信息进行排序，排序范围是从no[1]到no[n]
+	sort(no + 1, no + n + 1, cmp);
+	//输出总分最高的学生信息
+	cout << no[1].name << ' ' << no[1].a << ' ' << no[1].b << ' ' << no[1].c << '\n';
+	return 0;
+}

@@ -1,0 +1,57 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void exsoldier(int numsoldier) {
+	vector<int> soldier(numsoldier);
+	for (int i = 0; i < numsoldier; i++) 
+	{
+		soldier[i] = i + 1; // 初始化新兵编号
+	}
+
+	int a = 1;
+	while (soldier.size() > 3) { // 当新兵数量大于3时，进入循环筛选
+		vector<int> newline;
+		if (a % 2 == 1) 
+		{
+			for (int i = 0; i < soldier.size(); i++) 
+			{
+				if ((i + 1) % 2 != 0)
+				{ // 仅留下报数为一的新兵
+					newline.push_back(soldier[i]);
+				}
+			}
+		}
+		else 
+		{
+			for (int i = 0; i < soldier.size(); i++) 
+			{
+				if ((i + 1) % 3 != 0) 
+				{ // 留下报数不为3的新兵
+					newline.push_back(soldier[i]);
+				}
+			}
+		}
+		soldier = newline; // 更新编号
+		a++;
+	}
+
+	for (int i = 0; i < soldier.size(); i++) 
+	{
+		cout << soldier[i] << " ";
+	}
+	cout << "\n";
+}
+
+int main() 
+{
+	int N;
+	cin >> N;
+	for (int i = 0; i < N; i++)
+	{
+		int numsoldier;
+		cin >> numsoldier;
+		exsoldier(numsoldier);
+	}
+	return 0;
+}

@@ -1,0 +1,42 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+int main()
+{
+	int m,n;
+	while(cin>>n>>m)
+	{
+		int A[10000];
+		int B[10000];
+		for (int i=0;i<n;i++)
+		{
+			cin>>A[i];
+		}
+		for(int i=0;i<m;i++)
+		{
+		cin>>B[i];
+		}
+		int after[20000];
+		int count =0;
+		for (int i =0;i<n;i++)
+		{
+			after[count++]=A[i];
+		}
+		for (int j=0;j<m;j++)
+		{
+			after[count++]=B[j];
+		}
+		sort(after,after+count);
+		for (int i=0;i<count;i++)
+		{
+			if (i==0||after[i]!=after[i-1])
+			{
+				if (i>0)
+				cout<<" ";
+				cout<<after[i];
+			}
+		}
+		cout<<"\n";
+	}
+	return 0;
+}

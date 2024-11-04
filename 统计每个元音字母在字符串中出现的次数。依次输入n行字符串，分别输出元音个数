@@ -1,0 +1,61 @@
+#define  _CRT_SECURE_NO_WARNINGS
+#include <iostream>
+#include <cstring>//用于字符串操作strlen
+using namespace std;
+int main()
+{
+	int n = 0;
+	cin >> n;
+	cin.ignore();//忽略掉换行符
+	char arr[100][101] = {0};//初始化二维数组，每行最多100个字符
+	for (int i = 0; i < n; i++)
+	{
+		cin .getline(arr[i],101);//读取每一行字符串
+   }
+		//统计并输出每个字符串中的元音个数
+		for (int i = 0; i <n; i++)
+		{
+			//统计每个元音的个数必须得在循环中定义初始化，因为每一次循环元音的统计都是从0开始的
+        int counta = 0, counte = 0, counti = 0, counto = 0, countu = 0;
+			for (int j = 0; j < strlen(arr[i]); j++)
+			{
+             switch (arr[i][j])
+			 {
+			case 'a':
+			case 'A':
+				counta++;
+				break;
+			case'e':
+			case'E':
+				counte++;
+				break;
+			case'i':
+			case'I':
+				counti++;
+				break;
+			case'o':
+			case'O':
+				counto++;
+				break;
+			case'u':
+			case'U':
+				countu++;
+				break;
+
+			 }
+			
+			
+		}
+			//输出结果
+		cout << "a:" << counta << "\n";
+		cout << "e:" << counte << "\n";
+		cout << "i:" << counti << "\n";
+		cout << "o:" << counto << "\n";
+		cout << "u:" << countu << "\n";
+		//如果不是最后一个测试实例，输出一个空行
+		if (i<n-1)
+		cout << "\n";
+	}
+
+	return 0;
+}

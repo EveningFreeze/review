@@ -1,0 +1,36 @@
+#include <iostream>
+#include <algorithm>
+using namespace std;
+const int n= 300;//定义最大学生人数
+struct node
+{
+    int chinese, math, english;
+    int sum;
+    int number;
+} no[n];//定义学生数组
+bool cmp(node x, node y) //比较函数，用于从小到大排序
+{
+    if (x.sum != y.sum)
+        return x.sum > y.sum;  //总分高的在前面
+    else if (x.chinese != y.chinese)
+        return x.chinese > y.chinese;  //语文成绩高的在前面
+    else
+        return x.number < y.number; //学号小的在前面
+}
+int main() {
+    int n;
+    cin >> n; //读取学生人数
+//读取每个学生的成绩并计算总分和学号
+    for (int i = 0; i < n; i++) {
+        cin >> no[i].chinese >> no[i].math >> no[i].english;
+        no[i].sum = no[i].chinese + no[i].math + no[i].english;
+        no[i].number = i + 1; //学号从1开始
+    }
+//按规则从大到小排序
+    sort(no, no + n, cmp);
+//排出前五名学生的学号和总分
+    for (int i = 0; i < 5; i++) {
+        cout << no[i].number << ' ' << no[i].sum << "\n";
+    }
+    return 0;
+}

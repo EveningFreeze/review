@@ -1,0 +1,38 @@
+#include <iostream>
+#include <algorithm>
+#include <string>
+using namespace std;
+//自定义比较函数，用于比较两个字符串连接后的结果
+bool cmp(const string& a, const string& b)
+{
+	return a + b > b + a;//比较a+b和b+a的大小，返回较大的那个，其中a+b和b+a表示拼接后的值
+}
+//打印函数，用于将整数转换为字符串并输出
+void print(int x)
+{
+	if (x > 9)
+	{
+		print(x / 10);//递归调用，处理高位数字
+	}
+	int a = x % 10;//取当前位的数字
+	cout << a;//输出当前位的数字
+}
+int main()
+{
+	int n;
+	cin >> n;//读取数字个数
+	string arr[20];//使用字符串数组来存储整数
+	for (int i = 0; i < n; i++)
+	{
+		cin >> arr[i];//读取每个整数
+	}
+	//按自定义比较函数排序
+	sort(arr, arr + n, cmp);
+	//输出结果
+	for (int i = 0; i < n; i++)
+	{
+		cout << arr[i];//输出排序后的字符串数组
+	}
+	cout << "\n";
+	return 0;
+}

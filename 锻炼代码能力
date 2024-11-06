@@ -1,0 +1,57 @@
+#include <iostream>
+#include <cstring>
+#include <cctype>
+using namespace std;
+
+// 判断s1是否是s2的子串
+int is_substring(char s1[], char s2[]) {
+    int strs1 = strlen(s1); // 获取s1的长度
+    int strs2 = strlen(s2); // 获取s2的长度
+    for (int i = 0; i <= strs2 - strs1; i++) { // 遍历s2，寻找s1的匹配
+        int j;
+        for (j = 0; j < strs1; j++) { // 逐字符比较s1和s2的子串
+            if (tolower(s2[i + j]) != tolower(s1[j])) { // 不区分大小写比较
+                break; // 如果不匹配，跳出内层循环
+            }
+        }
+        if (j == strs1) { // 如果完全匹配
+            bool dependent = (i == 0) || (s2[i - 1] == ' '); // 检查前一个字符是否是空格或文章开头
+            bool nextdependent = (i + strs1 == strs2) || (s2[i + strs1] == ' '); // 检查后一个字符是否是空格或文章结尾
+            if (dependent && nextdependent) { // 如果是独立的单词
+                return i; // 返回匹配的起始位置
+            }
+        }
+    }
+    return -1; // 未找到匹配的子串
+}
+
+int main() {
+    char s1[11]; // 存储单词
+    char s2[1000000]; // 存储文章
+    cin.getline(s1, 11); // 读取单词
+    cin.getline(s2, 1000000); // 读取文章
+
+    int count = 0; // 记录单词出现的次数
+    int firstspot = -1; // 记录单词第一次出现的位置
+    int pos = 0; // 当前查找的起始位置
+
+    while (true) {
+        int yspot = is_substring(s1, s2 + pos); // 查找单词在文章中的位置
+        if (yspot == -1) { // 如果没有找到
+            break; // 跳出循环
+        }
+        count++; // 找到一个匹配，次数加1
+        if (firstspot == -1) { // 如果是第一次找到
+            firstspot = pos + yspot; // 记录第一次出现的位置
+        }
+        pos += yspot + strlen(s1); // 移动到下一个可能的位置
+    }
+
+    if (count > 0) { // 如果找到单词
+        cout << count << " " << firstspot << "\n"; // 输出次数和第一次出现的位置
+    } else { // 如果没有找到单词
+        cout << "-1" << "\n"; // 输出-1
+    }
+
+    return 0;
+}

@@ -1,0 +1,67 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main()
+{
+    const int ROW = 4; // 定义常量 ROW 表示输入的行数
+    const int COL = 100; // 定义常量 COL 表示每行的最大字符数
+    char sentence[ROW][COL + 1]; // 定义一个二维字符数组来存储输入的句子
+    int counts[26] = { 0 }; // 定义一个数组来存储每个字母的出现次数，初始化为0
+
+    // 读取四行字符
+    for (int i = 0; i < ROW; i++)
+    {
+        cin.getline(sentence[i], COL + 1); // 从标准输入读取一行字符，存储到 sentence[i] 中
+    }
+
+    // 统计每行字符的出现次数
+    for (int i = 0; i < ROW; i++)
+    {
+        int str = strlen(sentence[i]); // 获取当前行的字符长度
+        for (int j = 0; j < str; j++)
+        {
+            if (sentence[i][j] >= 'A' && sentence[i][j] <= 'Z') // 检查字符是否为大写字母
+                counts[sentence[i][j] - 'A']++; // 如果是大写字母，增加对应字母的计数
+        }
+    }
+
+    // 找到最大出现次数
+    int maxCount = 0;
+    for (int i = 0; i < 26; i++)
+    {
+        if (counts[i] > maxCount)
+        {
+            maxCount = counts[i]; // 更新最大出现次数
+        }
+    }
+
+    // 输出频率图
+    for (int i = maxCount; i > 0; i--) // 从最大出现次数开始，逐行输出
+    {
+        for (int j = 0; j < 26; j++)
+        {
+            if (counts[j] >= i) // 如果当前字母的出现次数大于等于当前行数
+            {
+                cout << "*"; // 输出星号
+            }
+            else
+            {
+                cout << " "; // 否则输出空格
+            }
+            if (j < 25) cout << " "; // 在字母之间添加空格，除了最后一个字母
+        }
+        cout << "\n"; // 换行
+    }
+
+    // 输出字母
+    for (char c = 'A'; c <= 'Z'; c++) // 从 'A' 到 'Z' 输出字母
+    {
+        cout << c; // 输出当前字母
+        if (c < 'Z') cout << " "; // 在字母之间添加空格，除了最后一个字母
+    }
+    cout << "\n"; // 换行
+
+    return 0; // 程序结束
+}
+        

@@ -1,0 +1,35 @@
+#include <iostream>
+#include <iomanip>  // 用于设置输出格式
+using namespace std;
+
+int main()
+{
+    int n = 0;  // 定义变量 n，用于存储数组元素的个数
+    cin >> n;   // 从标准输入读取 n 的值
+
+    int arr[10000];  // 定义一个大小为 10000 的数组，用于存储输入的整数
+    for (int i = 0; i < n; i++)  // 循环读取 n 个整数
+    {
+        cin >> arr[i];  // 读取第 i 个整数并存储到数组中
+    }
+
+    int max = 0;  // 定义变量 max，用于存储最大值，初始化为 0
+    int min = 100;  // 定义变量 min，用于存储最小值，初始化为 100
+    int sum = 0;  // 定义变量 sum，用于存储数组元素的总和，初始化为 0
+
+    for (int i = 0; i < n; i++)  // 遍历数组，计算最大值、最小值和总和
+    {
+        if (arr[i] > max)  // 如果当前元素大于 max
+            max = arr[i];  // 更新 max 为当前元素
+        if (arr[i] < min)  // 如果当前元素小于 min
+            min = arr[i];  // 更新 min 为当前元素
+        sum += arr[i];  // 将当前元素加到 sum 中
+    }
+
+    double average = static_cast<double>(sum) / n;  // 计算平均值，将 sum 转换为 double 类型
+    cout << max << "\n";  // 输出最大值
+    cout << min << "\n";  // 输出最小值
+    cout << fixed << setprecision(2) << average << "\n";  // 输出平均值，保留两位小数
+
+    return 0;
+}

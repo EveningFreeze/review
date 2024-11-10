@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// 判断数组是否符合“欢乐的跳”
+bool is_jolly(int arr[], int n)
+{
+    if (n == 1) return true;  // 如果只有一个元素，直接返回 true
+
+    bool count[n] = { false };  // 初始化一个布尔数组，用于记录差值是否出现
+
+    for (int i = 0; i < n - 1; i++)  // 遍历数组，计算每两个连续元素之间的差的绝对值
+    {
+        int a = abs(arr[i + 1] - arr[i]);  // 计算差值的绝对值
+        if (a >= 1 && a <= n - 1)  // 如果差值在 [1, n-1] 范围内
+            count[a] = true;  // 标记差值出现
+    }
+
+    for (int i = 1; i < n; i++)  // 检查 count 数组中是否所有差值都已出现
+    {
+        if (!count[i])  // 如果有任何一个差值未出现
+            return false;  // 返回 false
+    }
+    return true;  // 所有差值都已出现，返回 true
+}
+
+int main()
+{
+    int n;
+    int a[10000];
+    while (cin >> n)  // 支持多组测试数据
+    {
+        for (int i = 0; i < n; i++)  // 读取 n 个整数
+        {
+            cin >> a[i];
+        }
+
+        if (is_jolly(a, n))  // 判断数组是否符合“欢乐的跳”
+            cout << "Jolly" << endl;  // 输出 "Jolly"
+        else
+            cout << "Not jolly" << endl;  // 输出 "Not jolly"
+    }
+    return 0;
+}

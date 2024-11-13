@@ -59,3 +59,65 @@ int main()
 
 	return 0;
 }
+
+
+
+//讲解答案
+#include <cstdio>
+#include <iostream>
+#include <string>
+using namespace std;
+
+// 声明全局变量来计数每个元音的出现次数
+string s; // 用于存储输入的字符串
+int a, e, i, o, u; // 计数器，分别用于统计每个元音字母的出现次数
+
+int main()
+{
+    int n; // 测试用例的数量
+
+    // 读取测试用例的数量
+    while (cin >> n) 
+     {
+        getchar(); // 消耗输入后的换行符
+
+        // 循环处理每个测试用例
+        for (int k = 1; k <= n; k++) 
+         {
+            getline(cin, s); // 读取整行输入
+            int l = s.length(); // 获取输入字符串的长度
+
+            // 循环遍历字符串中的每个字符
+            for (int j = 0; j < l; j++)
+             {
+                if (s[j] == 'a')
+                    a++; // 如果字符是'a'，则增加'a'的计数
+                else if (s[j] == 'e')
+                    e++; // 如果字符是'e'，则增加'e'的计数
+                else if (s[j] == 'i')
+                    i++; // 如果字符是'i'，则增加'i'的计数
+                else if (s[j] == 'o')
+                    o++; // 如果字符是'o'，则增加'o'的计数
+                else if (s[j] == 'u')
+                    u++; // 如果字符是'u'，则增加'u'的计数
+            }
+
+            // 输出每个元音字母的计数结果
+            cout << "a:" << a << '\n';
+            cout << "e:" << e << '\n';
+            cout << "i:" << i << '\n';
+            cout << "o:" << o << '\n';
+            cout << "u:" << u << '\n';
+
+            // 如果不是最后一个测试用例，输出一个空行
+            if (k != n)
+            {
+                cout << '\n';
+            }
+
+            // 重置所有元音字母的计数器
+            a = 0, e = 0, i = 0, o = 0, u = 0;
+        }
+    }
+    return 0; // 程序结束
+}

@@ -1,0 +1,57 @@
+#include<iostream>
+using namespace std;
+const int N = 30;//定义一个常量N，用于表示数组的最大长度
+//全局变量，分别表示整数的个数、要选取的整数个数
+int n, k;
+//用于存储输入的n个整数的数组
+int q[N];
+//用于在深度优先搜素过程中临时存储选取的整数的数组
+int arr[N];
+//用于记录和为素数的组合的数量
+int res = 0;
+bool is_prime(int sum)
+{
+	if (sum < 2) return false;
+	for (int i = 2; i <= sum / i; i++)
+	{
+		if (sum % i == 0)
+			return false;
+	}
+	return true;
+}
+//参数x表示当前已经选取的整数个数，start表示下一次选取整数的起始下标
+void dfs(int x, int start)
+{
+	//如果已经选取了k个整数，就计算这k个整数的和，并判断是否为素数
+	if (x > k)
+	{
+		int sum = 0;
+		for (int i = 1; i <= k; i++)
+		{
+			sum += arr[i];
+		}
+		if (is_prime(sum))
+			res++;
+		return;
+	}
+	//从start开始到n,依次选取整数加入到当前组合中
+	for (int i = start; i <= n; i++)
+	{   //将当前选取色整数存入arr数组中
+		arr[x] = q[i];
+		//继续深度优先搜素下一个整数，下一次选取的整数的起始下标为i+
+		dfs(x + 1, i + 1);
+		//回溯，将当前位置的整数置为0，以便尝试其他组合
+		arr[x] = 0;
+	}
+}
+int main()
+{
+	cin >> n >> k;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> q[i];
+	}
+	dfs(1, 1);
+	cout << res << endl;
+	return 0;
+}

@@ -1,0 +1,57 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+
+const int N = 10010;
+int n, m;    //n为手指的数量（一共有几个数全排列），m为要求输出的排列数量（要加上的数）
+int arr[N];  //存储当前排列的数组，记录方案
+int mars[N];  //存储原始手指位置的数组（记录火星人的初始排列）
+bool st[N];   //标记数组，用于标记某个手指是否已经在当前排列中
+int res=0;    //存储找到的排列数量
+bool return0 = false;   //用于控制搜素过程，当找到m+1个排列时停止搜素
+
+void dfs(int x)
+{
+	if (return0)return;  //如果已经找到m+1个排列，停止搜索
+	if (x > n)  //如果已经生成了一个完整的排列
+	{
+		res++;  //排列数量+1
+		if (res == m + 1)  //如果找到了m+1个排列
+		{
+			return0 = true;  //标记为true，停止搜索
+			for (int i = 1; i <= n; i++)
+			{
+				cout << arr[i]<<' ';  //打印当前排列
+			}
+		}
+		return;
+	}
+	for (int i = 1; i <= n; i++)  //遍历所有手指
+	{
+		if (!res)  //如果还没有找到m+1个手指
+		{
+			i = mars[x];  //按照原始手指位置进行交换（确保m+1个手指是在初始手指的基础上寻找的）
+		}
+		if (!st[i])  //如果当前手指没有在排列中
+		{
+			st[i] = true;   //标记当前手指为已使用
+			arr[x] = i;     //将当前手指插入排列
+			dfs(x + 1);      
+			st[i] = false;   //回溯，标记当前手指未使用
+			arr[x] = 0;      //回溯，将当前手指从排列中移除
+		}
+	}
+
+}
+
+int main()
+{
+	cin >> n >> m;
+	for (int i = 1; i <= n; i++)
+	{
+		cin >> mars[i];   //输入每个手指的原始位置
+	}
+	dfs(1);
+	return 0;
+}

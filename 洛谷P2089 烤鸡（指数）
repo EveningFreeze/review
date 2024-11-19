@@ -1,0 +1,53 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+
+const int N = 20;//定义常量N，用于定义数组大小
+int n;        //用于存储美味程度的变量
+int arr[N];   //存储当前配料方案的数组
+int res = 0;  //存储总方案书的变量
+int mem[59055][N];//存储所有可能方案的数组，59055是3的10次方
+
+void dfs(int x, int sum)
+{
+	if (sum > n)return;  //如果当前总和已经超过n,直接返回，剪枝操作
+
+		if (x > 10)   //如果已经考虑完10种配料
+		{
+			if (sum == n)   //如果当前所有配料总和为n
+			{
+				res++;    //方案数+1
+				for (int i = 1; i <= 10; i++)
+				{
+					mem[res][i] = arr[i];   //将当前方案存储到mem数组中
+				}
+			}
+			return;
+	
+		}
+		
+	for (int i = 1; i <= 3; i++)  //每种配料可以放1到3克
+	{
+		arr[x] = i;   //将当前配料的量设置为i克
+		dfs(x + 1, sum + i);    //递归考虑下一个配料
+		arr[x] = 0;   //回溯，将当前配料的量重置为0
+
+	}
+}
+
+int main()
+{
+	cin >> n;   //输入美味程度
+	dfs(1, 0);    //从第1种配料开始，总和为0开始深度优先搜素
+	cout << res << endl;   //输出方案总数
+	for (int i = 1; i <= res; i++)  //遍历所有方案
+	{
+		for (int j = 1; j <= 10; j++)  
+		{
+			cout << mem[i][j]<<' ';  //输出第i个方案的第j种配料的量
+		}
+		cout << endl;   //每个方案输出完毕后换行
+	}
+	return 0;
+}

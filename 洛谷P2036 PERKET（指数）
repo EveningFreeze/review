@@ -1,0 +1,57 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <cmath>
+
+using namespace std;
+
+const int N = 20;  // 定义常量N，表示最多有20种配料
+int n;  // 用于存储配料的数量
+int acid[N], bitter[N];  // 数组acid和bitter分别存储每种配料的酸度和苦度
+int res = 1e9;  // 初始化结果res为一个很大的数，用于存储酸度和苦度的最小绝对差
+int st[N];  // 数组st用于标记每种配料是否被选中
+
+// 深度优先搜索函数，x表示当前处理的配料编号
+void dfs(int x)
+{
+    if (x > n)  // 如果已经处理完所有配料
+    {
+        bool has_tl = false;  // 标记是否有至少一种配料被选中
+        int sum1 = 1;  // 初始化酸度为1，因为要进行乘法
+        int sum2 = 0;  // 初始化苦度为0，因为要进行加法
+        for (int i = 1; i <= n; i++)  // 遍历所有配料
+        {
+            if (st[i] == 1)  // 如果第i种配料被选中
+            {
+                has_tl = true;  // 标记有配料被选中
+                sum1 *= acid[i];  // 将第i种配料的酸度乘到sum1
+                sum2 += bitter[i];  // 将第i种配料的苦度加到sum2
+            }
+        }
+        if (has_tl)  // 如果有至少一种配料被选中
+        {
+            res = min(res, abs(sum1 - sum2));  // 更新res为当前酸度和苦度的绝对差的最小值
+        }
+        return;  // 返回，继续尝试其他可能的配料组合
+    }
+
+    st[x] = 1;  // 选择第x种配料
+    dfs(x + 1);  // 递归处理下一种配料
+    st[x] = 0;  // 取消选择第x种配料
+
+    st[x] = 2;  // 不选择第x种配料
+    dfs(x + 1);  // 递归处理下一种配料
+    st[x] = 0;  // 取消不选择第x种配料
+}
+
+int main()
+{
+    cin >> n;  // 输入配料的数量
+    for (int i = 1; i <= n; i++)  // 遍历每种配料
+    {
+        cin >> acid[i] >> bitter[i];  // 输入每种配料的酸度和苦度
+    }
+    dfs(1);  // 从第一种配料开始进行深度优先搜索
+    cout << res << endl;  // 输出酸度和苦度的最小绝对差
+    return 0;
+}

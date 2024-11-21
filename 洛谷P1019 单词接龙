@@ -1,0 +1,56 @@
+#include <iostream>
+#include<algorithm>
+#include<cstring>
+
+using namespace std;
+
+const int N = 30; // 定义最大单词数量，根据题目要求n≤8，这里留有余量
+int n; // 单词数量
+string words[N]; // 存储每个单词的数组
+int used[N]; // 用于记录每个单词在当前“龙”中出现的次数
+int g[N][N]; // 存储两个单词之间最长的公共后缀长度的二维数组
+
+int res = 0; // 定义一个整数res，用于存储最长“龙”的长度
+
+// 定义深度优先搜索函数dfs，用于找出最长的“龙”
+void dfs(string dragon, int x) {
+    res = max(res, (int)dragon.size()); // 更新最长“龙”的长度
+    used[x]++; // 增加当前单词的使用次数
+    for (int i = 0; i < n; i++) {
+        // 如果单词i与当前单词x可以连接，并且单词i的使用次数不超过2
+        if (g[x][i] && used[i] < 2) {
+            dfs(dragon + words[i].substr(g[x][i]), i); // 递归搜索下一个单词
+        }
+    }
+    used[x]--; // 回溯，减少当前单词的使用次数
+}
+
+int main() {
+    cin >> n; // 读取单词数量
+    for (int i = 0; i < n; i++) {
+        cin >> words[i]; // 读取每个单词
+    }
+    char start; // 读取起始字母
+    cin >> start;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            string a = words[i], b = words[j]; // 两个单词
+            for (int k = 1; k < min(a.size(), b.size()); k++) {
+                // 检查两个单词的最长公共后缀长度
+                if (a.substr(a.size() - k, k) == b.substr(0, k)) {
+                    g[i][j] = k; // 存储最长公共后缀长度
+                    break; // 找到最长公共后缀后，不需要继续检查更短的后缀
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < n; i++) {
+        // 如果单词的第一个字母与起始字母相同，从这个单词开始构建“龙”
+        if (words[i][0] == start) {
+            dfs(words[i], i);
+        }
+    }
+    cout << res << endl; // 输出最长“龙”的长度
+    return 0;
+}

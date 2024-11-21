@@ -1,0 +1,42 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+using namespace std;
+
+const int N = 10; // 定义最大棋盘大小为10x10，根据题目要求n≤8，这里留有余量
+int n, k; // n表示棋盘的大小，k表示需要摆放的棋子数量
+char g[N][N]; // 定义一个二维数组g，用于存储棋盘的形状，'#'表示棋盘区域，'.'表示空白区域
+bool st[N]; // 定义一个一维布尔数组st，用于标记列是否已经被占用
+int res = 0; // 定义一个整数res，用于存储摆放方案的数目
+
+// 定义深度优先搜索函数dfs，用于找出所有可能的摆放方案
+void dfs(int x, int cnt) {
+    if (cnt == k) { // 如果已经摆放了k个棋子
+        res++; // 增加一个方案计数
+        return; // 回溯
+    }
+    if (x == n) return; // 如果已经遍历完所有行，结束搜索
+    
+    for (int i = 0; i < n; i++) { // 遍历每一列
+        if (!st[i] && g[x][i] == '#') { // 如果当前列没有被占用，并且当前行为棋盘区域
+            st[i] = true; // 标记当前列已被占用
+            dfs(x + 1, cnt + 1); // 递归搜索下一行，且摆放棋子的数量加1
+            st[i] = false; // 回溯，取消当前列的占用标记
+        }
+    }
+    dfs(x + 1, cnt); // 无论是否找到合适的列，都递归搜索下一行，这是搜索所有可能的摆放方案的关键
+}
+
+int main() {
+    while (cin >> n >> k, n > 0 && k > 0) { // 读取输入，直到n和k都为-1
+        for(int i = 0; i < n; i++) { // 读取棋盘形状
+            cin >> g[i];
+        }
+        res = 0; // 重置方案计数器
+        memset(st, false, sizeof(st)); // 初始化列占用标记数组为false
+        dfs(0, 0); // 从第一行开始深度优先搜索
+        cout << res << endl; // 输出摆放方案的数目
+    }
+    return 0;
+}

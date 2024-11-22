@@ -1,0 +1,102 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+#include <queue>
+
+// 使用typedef定义一个名为PII的类型别名，它代表std::pair<int, int>类型，用于表示二维坐标
+typedef std::pair<int, int> PII;
+using namespace std;
+
+// 定义一个常量N，用于表示迷宫方阵的最大可能边长（这里假设最大为10）
+const int N = 10;
+
+// 全局变量，用于存储迷宫的行数和列数
+int n, m;
+
+// 二维数组g用于表示迷宫，其中0表示通路，1表示障碍
+int g[N][N];
+
+// 二维数组dist用于记录从起点到每个点的最短距离，初始化为-1
+int dist[N][N];
+
+// 定义一个队列q，用于存储待探索的坐标点，元素类型为PII（即坐标对）
+queue<PII> q;
+
+// 定义四个方向的偏移量数组，分别表示上、右、下、左四个方向
+// dx[i]和dy[i]表示在第i个方向上的行和列的偏移量
+int dx[] = { -1, 0, 1, 0 };
+int dy[] = { 0, 1, 0, -1 };
+
+// 广度优先搜索函数，用于在迷宫中寻找从给定起点(x1, y1)到终点的最短路径
+// 参数x1和y1分别表示起点的行和列坐标
+int bfs(int x1, int y1)
+{
+    // 将dist数组的所有元素初始化为-1，表示尚未到达过这些点
+    memset(dist, -1, sizeof dist);
+
+    // 将起点坐标(x1, y1)加入队列q，表示从该点开始探索
+    q.push({ x1, y1 });
+
+    // 将起点到自身的距离设置为0
+    dist[x1][y1] = 0;
+
+    // 当队列不为空时，进行循环探索
+    while (q.size() &&!q.empty())
+    {
+        // 获取队列头部的坐标点
+        auto t = q.front();
+        q.pop();
+
+        // 遍历四个方向
+        for (int i = 0; i < 4; i++)
+        {
+            // 计算在当前方向上移动后的坐标
+            int a = t.first + dx[i];
+            int b = t.second + dy[i];
+
+            // 判断移动后的坐标是否在迷宫范围内，如果不在则跳过当前方向的探索
+            if (a < 1 || a > n || b < 1 || b > n) continue;
+
+            // 如果移动后的位置是障碍（值为1），则跳过当前方向的探索
+            if (g[a][b]!= 0) continue;
+
+            // 如果已经访问过该点（距离不为-1），则跳过当前方向的探索
+            if (dist[a][b] > 0) continue;
+
+            // 将新的坐标点加入队列q，准备后续探索
+            q.push({ a, b });
+
+            // 更新从起点到新坐标点的距离，为当前点的距离加1
+            dist[a][b] = dist[t.first][t.second] + 1;
+
+            // 如果新坐标点就是终点（假设终点坐标为(n, m)），则返回从起点到终点的距离
+            if (a == n && b == m) return dist[m][n];
+        }
+    }
+
+    // 如果没有找到从起点到终点的路径，返回终点在dist数组中的值（仍然为-1）
+    return dist[m][n];
+}
+
+int main()
+{
+    // 从标准输入读取迷宫的行数n和列数m
+    cin >> n >> m;
+
+    // 遍历迷宫的每一行和每一列，从标准输入读取每个位置的值（0或1），填充迷宫数组g
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            cin >> g[i][j];
+        }
+    }
+
+    // 调用bfs函数，从起点(1, 1)开始搜索到终点的最短路径，并将结果存储在res中
+    int res = bfs(1, 1);
+
+    // 输出从起点到终点的最短路径长度，如果返回值为-1，则表示没有通路
+    cout << res << endl;
+
+    return 0;
+}

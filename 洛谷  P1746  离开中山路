@@ -1,0 +1,62 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+#include<queue>
+
+using namespace std;
+
+#define x first
+#define y second
+typedef std::pair<int, int> PII; // 定义一个 pair 类型，用于存储坐标 (x, y)
+const int N = 1010; // 地图的最大尺寸
+
+int n; // 地图的边长
+int dist[N][N]; // 记录从起点到每个点的最短距离
+queue<PII> q; // 用于 BFS 的队列
+char g[N][N]; // 存储地图信息
+int x1, start_y, x2, end_y; // 起点和终点的坐标
+
+// 方向数组，分别表示上、右、下、左四个方向的移动
+int dx[] = { -1, 0, 1, 0 };
+int dy[] = { 0, 1, 0, -1 };
+
+// BFS 函数，计算从 (x1, start_y) 到 (x2, end_y) 的最短路径
+int bfs(int x1, int start_y)
+{
+    memset(dist, -1, sizeof dist); // 初始化 dist 数组为 -1，表示未访问过
+    q.push({ x1, start_y }); // 将起点坐标入队
+    dist[x1][start_y] = 0; // 起点到起点的距离为 0
+
+    while (q.size()) // 当队列不为空时，继续 BFS
+    {
+        auto t = q.front(); // 取出队首元素
+        q.pop(); // 弹出队首元素
+        for (int i = 0; i < 4; i++) // 遍历四个方向
+        {
+            int a = t.x + dx[i]; // 计算新的 x 坐标
+            int b = t.y + dy[i]; // 计算新的 y 坐标
+            if (a < 0 || a >= n || b < 0 || b >= n) continue; // 如果新坐标超出地图范围，跳过
+            if (g[a][b] != '0') continue; // 如果新坐标是店铺（'1'），跳过
+            if (dist[a][b] >= 0) continue; // 如果新坐标已经被访问过，跳过
+
+            q.push({ a, b }); // 将新坐标入队
+            dist[a][b] = dist[t.x][t.y] + 1; // 更新新坐标的距离
+        }
+    }
+    if (dist[x2][end_y] > 0) return dist[x2][end_y]; // 如果终点被访问过，返回终点的距离
+    return -1; // 否则返回 -1，表示无法到达终点
+}
+
+int main()
+{
+    cin >> n; // 输入地图的边长
+    for (int i = 0; i < n; i++)
+    {
+        cin >> g[i]; // 输入地图的每一行
+    }
+    cin >> x1 >> start_y >> x2 >> end_y; // 输入起点和终点的坐标
+    x1--, start_y--, x2--, end_y--; // 将坐标转换为从 0 开始的索引
+    int res = bfs(x1, start_y); // 调用 BFS 函数计算最短路径
+    printf("%d\n", res); // 输出结果
+    return 0;
+}

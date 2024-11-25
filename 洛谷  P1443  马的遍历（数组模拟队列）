@@ -1,0 +1,60 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+const int N = 410; // 棋盘的最大尺寸
+
+using namespace std;
+#define x first
+#define y second
+typedef std::pair<int, int> PII; // 定义一个 pair 类型，用于存储坐标 (x, y)
+
+int n, m; // 棋盘的行数和列数
+int dist[N][N]; // 记录从起点到每个点的最短步数
+PII q[N * N]; // 用于 BFS 的队列
+
+// 方向数组，表示马的8个移动方向
+int dx[] = { 2, 2, 1, 1, -1, -1, -2, -2 };
+int dy[] = { 1, -1, 2, -2, 2, -2, 1, -1 };
+
+// BFS 函数，计算从 (x1, y1) 到棋盘上任意一个点的最少步数
+void bfs(int x1, int y1)
+{
+    memset(dist, -1, sizeof dist); // 初始化 dist 数组为 -1，表示未访问过
+    q[0] = { x1, y1 }; // 将起点坐标入队
+    dist[x1][y1] = 0; // 起点到起点的步数为 0
+    int hh = 0, tt = 0; // 队列的头尾指针
+
+    while (hh <= tt) // 当队列不为空时，继续 BFS
+    {
+        auto t = q[hh++]; // 取出队首元素
+        for (int i = 0; i < 8; i++) // 遍历8个方向
+        {
+            int a = t.x + dx[i]; // 计算新的 x 坐标
+            int b = t.y + dy[i]; // 计算新的 y 坐标
+            if (a < 1 || a > n || b < 1 || b > m) continue; // 如果新坐标超出棋盘范围，跳过
+            if (dist[a][b] >= 0) continue; // 如果新坐标已经被访问过，跳过
+
+            dist[a][b] = dist[t.x][t.y] + 1; // 更新新坐标的步数
+            q[++tt] = { a, b }; // 将新坐标入队
+        }
+    }
+}
+
+int main()
+{
+    int x1, y1;
+    cin >> n >> m >> x1 >> y1; // 输入棋盘的行数、列数和起点的坐标
+    bfs(x1, y1); // 调用 BFS 函数计算最短步数
+
+    // 输出结果
+    for (int i = 1; i <= n; i++)
+    {
+        for (int j = 1; j <= m; j++)
+        {
+            printf("%-5d", dist[i][j]); // 输出每个点的最少步数，宽度为5
+        }
+        printf("\n"); // 换行
+    }
+    return 0;
+}

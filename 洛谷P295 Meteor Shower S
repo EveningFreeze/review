@@ -1,0 +1,67 @@
+
+#include <iostream>
+#include<algorithm>
+#include<cstring>
+
+// 使用pair来存储坐标点
+typedef std::pair<int, int> PII;
+#define x first
+#define y second
+const int N = 310; // 定义网格的最大尺寸
+
+using namespace std;
+int m; // 流星的数量
+int dist[N][N]; // 存储每个点到起点（0,0）的距离
+int fire[N][N]; // 存储每个点被流星击中的时间
+PII q[N * N]; // 队列，用于BFS
+
+// 四个方向的移动（上下左右）
+int dx[] = { -1,0,1,0 };
+int dy[] = { 0,1,0,-1 };
+
+// BFS函数，用于寻找最短路径
+int bfs() 
+{
+	q[0] = { 0,0 }; // 起点入队
+	dist[0][0] = 0; // 起点到起点的距离为0
+	int hh = 0; // 队列头部指针
+	int tt = 0; // 队列尾部指针
+	while (hh <= tt)  // 循环直到队列为空
+	{
+		auto t = q[hh++]; // 取出队列头部的点
+		for (int i = 0; i < 4; i++)// 检查四个方向
+		{ 
+			int a = t.x + dx[i], b = t.y + dy[i];
+			if (a < 0 || a >= N || b < 0 || b >= N) continue; // 越界检查
+			if (dist[a][b] != -1) continue; // 如果这个点已经有距离了，跳过
+			if (dist[t.x][t.y] + 1 >= fire[a][b]) continue; // 如果到达这个点的时间晚于或等于被击中的时间，跳过
+			dist[a][b] = dist[t.x][t.y] + 1; // 更新距离
+			q[++tt] = { a,b }; // 新点入队
+			if (fire[a][b] == 0x3f3f3f3f) return dist[a][b]; // 如果这个点是安全的，返回到达这个点的时间
+		}
+	}
+	return -1; // 如果没有找到安全的点，返回-1
+}
+
+int main() {
+	scanf("%d", &m); // 读取流星的数量
+	memset(fire, 0x3f, sizeof fire); // 初始化fire数组，0x3f3f3f3f是一个很大的数，表示不会被击中
+	memset(dist, -1, sizeof dist); // 初始化dist数组，-1表示未定义
+
+	while (m--) // 读取每个流星的信息
+	{ 
+		int x1, y1, t;
+		scanf("%d %d %d", &x1, &y1, &t);
+		fire[x1][y1] = min(t, fire[x1][y1]); // 更新击中时间
+		for (int i = 0; i < 4; i++)// 更新四个相邻点的击中时间
+		{ 
+			int a = x1 + dx[i], b = y1 + dy[i];
+			if (a < 0 || a >= N || b < 0 || b >= N) continue; // 越界检查
+			fire[a][b] = min(t, fire[a][b]);
+		}
+	}
+
+	int res = bfs(); // 执行BFS
+	printf("%d\n", res); // 输出结果
+	return 0;
+}

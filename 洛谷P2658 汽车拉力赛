@@ -1,0 +1,83 @@
+#include <iostream>
+#include <algorithm>
+#include <cstring>
+
+#define x first
+#define y second
+typedef std::pair<int, int> PII;
+const int N = 510;
+int high[N][N]; // 海拔高度
+int flag[N][N]; // 路标标记
+bool st[N][N];  // 访问标记
+PII q[N * N];   // BFS队列
+
+int n, m;       // 网格的行数和列数
+int cnt_flag = 0; // 路标总数
+
+int dx[] = { -1, 0, 1, 0 }; // 四个方向的x坐标偏移量
+int dy[] = { 0, -1, 0, 1 }; // 四个方向的y坐标偏移量
+
+// 检查难度系数mid是否满足条件
+bool check(int mid)
+{
+    memset(st, false, sizeof st); // 初始化访问标记
+    int hh = 0, tt = 0;
+    q[0] = { 1, 1 }; // 从第一个路标开始BFS
+    st[1][1] = true;
+    int cnt = 1; // 已访问的路标数
+
+    while (hh <= tt) 
+	{
+        auto t = q[hh++];
+        for (int i = 0; i < 4; i++) 
+		{
+            int a = t.x + dx[i], b = t.y + dy[i];
+            if (a < 1 || a > n || b < 1 || b > m) continue; // 越界检查
+            if (st[a][b]) continue; // 已经访问过
+            if (abs(high[t.x][t.y] - high[a][b]) > mid) continue; // 海拔差超过mid
+
+            q[++tt] = { a, b };
+            st[a][b] = true;
+
+            if (flag[a][b] == 1) // 如果是路标
+			{ 
+                cnt++;
+                if (cnt == cnt_flag) return true; // 所有路标都可达
+            }
+        }
+    }
+    return false;
+}
+
+int main() 
+{
+    scanf("%d %d", &n, &m); // 读取网格的行数和列数
+
+    for (int i = 1; i <= n; i++) 
+	{
+        for (int j = 1; j <= m; j++)
+		{
+            scanf("%d", &high[i][j]); // 读取海拔高度
+        }
+    }
+
+    for (int i = 1; i <= n; i++) 
+	{
+        for (int j = 1; j <= m; j++) 
+		{
+            scanf("%d", &flag[i][j]); // 读取路标标记
+            if (flag[i][j] == 1) cnt_flag++; // 统计路标总数
+        }
+    }
+
+    int l = 0, r = 1e9 + 10; // 二分查找的左右边界
+    while (l < r) 
+	{
+        int mid = (l + r) / 2;
+        if (check(mid)) r = mid; // 如果mid满足条件，缩小右边界
+        else l = mid + 1; // 否则增大左边界
+    }
+
+    printf("%d\n", r); // 输出最小难度系数
+    return 0;
+}

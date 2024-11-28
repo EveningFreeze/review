@@ -1,0 +1,77 @@
+#include<iostream>  // 包含输入输出流的头文件
+#include<algorithm>  // 包含STL算法的头文件
+#include<cstring>  // 包含C风格字符串处理函数的头文件
+#include<queue>  // 包含队列容器的头文件
+
+using namespace std;  // 使用标准命名空间
+
+// 定义一个类型别名，方便表示二维坐标点
+typedef pair<int, int> PII;
+const int N = 110;  // 定义最大网格大小
+int n, m;  // 分别表示网格的行数和列数
+char g[N][N];  // 存储网格的二维数组，'@'表示油口袋，'*'表示空地
+bool st[N][N];  // 标记数组，记录每个位置是否被访问过
+queue<PII> q;  // 队列，用于BFS遍历
+
+// 定义八个方向的移动向量，用于BFS遍历
+int dx[] = { -1, -1, -1, 0, 0, 1, 1, 1 };
+int dy[] = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+// 判断函数，检查坐标是否在网格内
+bool judge(int x, int y) 
+{
+    if (x < 0 || x >= n || y < 0 || y >= m) return false;  // 越界检查
+    return true;  // 在网格内返回true
+}
+
+// BFS函数，用于从(x, y)位置开始遍历油口袋
+void bfs(int x, int y) 
+{
+    q.push({ x,y });  // 将起始位置加入队列
+    st[x][y] = true;  // 标记为已访问
+    while (!q.empty()) // 当队列不为空时循环
+    {  
+        auto t = q.front();  // 获取队列前端元素
+        q.pop();  // 将队列前端元素出队
+        for (int i = 0; i < 8; i++)// 遍历八个方向
+        {  
+            int a = t.first + dx[i];  // 计算新位置的x坐标
+            int b = t.second + dy[i];  // 计算新位置的y坐标
+            if (judge(a, b) && !st[a][b] && g[a][b] == '@')  // 如果新位置在网格内且未访问且为油口袋
+            { 
+                st[a][b] = true;  // 标记为已访问
+                q.push({ a,b });  // 将新位置加入队列
+            }
+        }
+    }
+}
+
+// 主函数
+int main() 
+{
+    while (cin >> n >> m, n || m)  // 读取网格的行数和列数，直到输入0 0结束
+    { 
+        for (int i = 0; i < n; i++) // 读取网格内容
+        {  
+            for (int j = 0; j < m; j++) 
+            {
+                cin >> g[i][j];
+            }
+        }
+
+        int cnt = 0;  // 油口袋数量计数器
+        memset(st, false, sizeof st);  // 初始化标记数组为false
+        for (int i = 0; i < n; i++)// 遍历网格
+        {  
+            for (int j = 0; j < m; j++) {
+                if (g[i][j] == '@' && !st[i][j]) // 如果当前位置是油口袋且未访问
+                {  
+                    bfs(i, j);  // 从当前位置开始BFS遍历
+                    cnt++;  // 油口袋数量加一
+                }
+            }
+        }
+        cout << cnt << endl;  // 输出油口袋数量
+    }
+    return 0;  // 程序结束
+}

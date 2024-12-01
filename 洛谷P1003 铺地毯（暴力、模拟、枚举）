@@ -1,0 +1,81 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+const int N = 10010;
+using namespace std;
+int n;
+int arr[N][4];
+int x, y;
+
+int main() 
+{
+    cin >> n;
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = 0; j < 4; j++)
+        {
+            cin >> arr[i][j];
+        }
+    }
+
+    cin >> x >> y;
+
+    int cover = -1;//用于记录覆盖点（x,y）的最上面的地毯的编号
+    for (int i = n - 1; i >= 0; i--)   //从后往前遍历，直接找到最上面的地毯
+    { 
+        int x1 = arr[i][0] + arr[i][2] - 1;   //地毯的右上角的X坐标
+        int y1 = arr[i][1] + arr[i][3] - 1;   //地毯的右上角的Y坐标
+        if (x >= arr[i][0] && x <= x1 && y >= arr[i][1] && y <= y1)
+        {
+            cover = i + 1; //找到覆盖点（x,y）的地毯，几里路编号（因为i到0，比实际地毯数少1）
+            break;   //找到后即可推出循环，不必再找下面的另一张地毯
+        }
+    }
+
+    cout << cover << endl;//输出地毯编号 
+    return 0;
+}
+
+#include<iostream>
+#include<cstring>
+using namespace std;
+
+const int MAXN = 10000 + 5; // 定义最大值，考虑到可能的索引范围
+
+int v[MAXN][MAXN]; // 定义一个二维数组v，用于存储每个点被哪张地毯覆盖，-1表示没有被覆盖
+
+int main()
+{
+    memset(v, -1, sizeof(v)); // 使用memset函数将v数组全部初始化为-1，表示初始时没有地毯覆盖任何点
+
+    int n; // 定义一个整数n，用于存储地毯的数量
+
+    cin >> n; // 从输入中读取地毯的数量
+
+    // 循环读取每张地毯的信息，并在v数组中标记覆盖区域
+    for (int i = 1; i <= n; i++)
+    {
+        int a, b, g, k; // 定义四个整数，分别表示地毯左下角的坐标(a, b)以及地毯在x轴和y轴方向上的长度g和k
+
+        cin >> a >> b >> g >> k; // 从输入中读取地毯的左下角坐标和尺寸
+
+        // 循环标记地毯覆盖的区域，x和y的取值范围分别是[a, a+g]和[b, b+k]
+        for (int x = a; x <= a + g; x++) 
+        {
+            for (int y = b; y <= b + k; y++) 
+            {
+                v[x][y] = i; // 将地毯覆盖的点在v数组中标记为当前地毯的编号i
+            }
+        }
+    }
+
+    int x, y; // 定义两个整数x和y，用于存储需要查询的点的坐标
+
+    cin >> x >> y; // 从输入中读取需要查询的点的坐标
+
+    // 输出点(x, y)被哪张地毯覆盖，如果没有被任何地毯覆盖，则输出-1
+    cout << v[x][y] << endl;
+
+    return 0; // 程序结束
+}

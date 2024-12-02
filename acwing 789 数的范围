@@ -1,0 +1,76 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+using namespace std;
+
+const int N = 100010;  //根据题目中的范围来确定数组应该开多大，开的范围必须比n大
+int n, q;  //n个数，q次访问
+int arr[N];
+
+//数组中的个数时num,被询问数是x
+bool isBlue1(int num, int x)
+{
+	if (num <= x) return true;
+	return false;
+}
+ 
+//第一个二分查找找的是：被询问数的第一次出现的位置（下标）
+int binary_search1(int arr[], int len, int x)
+{
+	int l = -1, r = len;
+	while (l + 1 < r)
+	{
+		int mid = (l + r) / 2;
+		if (isBlue1(arr[mid], x))
+		{
+			l = mid;
+		}
+		r = mid;
+	}
+	if (arr[r] == x) return r;
+	else return -1;  //找不到就返回-1
+
+}
+
+bool isBlue2(int num, int x)
+{
+	if (num <= x) return true;
+	else return false;
+}
+
+//第二个二分查找找的是：被询问数的最后一次出现的位置（下标）
+int binary_search2(int arr[], int len, int x)
+{
+	int l = -1, r = len;
+	while (l + 1 < r)
+	{
+		int mid = (l + r) / 2;
+		if (isBlue2(arr[mid], x))
+		{
+			l = mid;
+		}
+		else r = mid;
+
+	}
+	if (arr[l] == x) return l;
+	else return -1;  //找不到就返回-1
+}
+
+int main()
+{
+	cin >> n >> q;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> arr[i];
+	}
+	while (q--)
+	{
+		int x;
+		cin >> x;
+		int res1 = binary_search1(arr, n, x);
+		int res2 = binary_search2(arr, n, x);
+		printf("%d %d\n", res1, res2);
+	}
+	return 0;
+}

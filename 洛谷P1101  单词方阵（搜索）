@@ -1,0 +1,67 @@
+#include<iostream>
+#include<algorithm>
+#include<cstring>
+
+using namespace std;
+
+int n; // 定义方阵的大小
+int mark[105][105] = { 0 }; // 标记数组，用于记录字母是否属于单词"yizhong"
+char fz[105][105]; // 存储输入的字母方阵
+string yz = "yizhong"; // 需要查找的单词
+
+// 定义8个方向的移动向量
+int dx[8] = { -1,-1,-1,0,0,1,1,1 };
+int dy[8] = { -1,0,1,-1,1,-1,0,1 };
+
+// 搜索函数，用于在方阵中查找单词"yizhong"
+void search(int x, int y) 
+{
+	for (int i = 0; i < 8; i++) // 遍历8个方向
+	{ 
+		int m = 1; // 标记当前方向是否找到匹配的单词
+		for (int j = 0; j < yz.size(); j++) // 遍历单词"yizhong"的每个字母
+		{ 
+			int tx = x + j * dx[i], ty = y + j * dy[i]; // 计算新的位置
+			if (fz[tx][ty] != yz[j])// 如果新位置的字母不匹配
+			{ 
+				m = 0; // 当前方向不匹配
+				break; // 跳出内层循环
+			}
+		}
+		if (m == 0) continue; // 如果当前方向不匹配，继续下一个方向
+		for (int j = 0; j < yz.size(); j++) // 如果找到匹配的单词
+		{ 
+			mark[x + j * dx[i]][y + j * dy[i]] = 1; // 标记单词中的字母
+		}
+	}
+}
+
+int main() {
+	cin >> n; // 输入方阵的大小
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			cin >> fz[i][j]; // 输入方阵中的每个字母
+		}
+	}
+
+	for (int i = 1; i <= n; i++) 
+	{
+		for (int j = 1; j <= n; j++) 
+		{
+			search(i, j); // 对方阵中的每个字母进行搜索
+		}
+	}
+
+	for (int i = 1; i <= n; i++) 
+	{
+		for (int j = 1; j <= n; j++) 
+		{
+			if (mark[i][j]) cout << fz[i][j]; // 如果标记数组中对应的位置为1，输出原字母
+			else cout << "*"; // 否则输出"*"
+		}
+		cout << endl; // 每行结束后换行
+	}
+	return 0;
+}

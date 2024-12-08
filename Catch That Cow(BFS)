@@ -1,0 +1,63 @@
+#include <iostream>
+#include<algorithm>
+#include<cstring>
+#include<queue>
+
+using namespace std;
+const int N = 100005; // 定义最大搜索范围，因为N和K的范围是0到100000
+int n, k; // n是Farmer John的起始位置，k是奶牛的位置
+
+// 定义一个结构体来存储当前的位置和到达该位置所需的步数
+struct num {
+	int x; // 当前位置
+	int step; // 到达当前位置所需的步数
+};
+
+bool vis[N]; // 访问标记数组，用于记录某个位置是否已经被访问过
+
+// BFS函数，用于计算Farmer John到达奶牛所需的最少步数
+void bfs() 
+{
+	queue<num> steps; // 使用队列来存储待处理的节点
+	num start, now, next; // 定义当前节点和下一个节点
+	memset(vis, false, sizeof(vis)); // 初始化访问标记数组，所有位置都未被访问
+	start.x = n; // 起始位置设置为Farmer John的起始位置
+	start.step = 0; // 起始位置的步数为0
+	steps.push(start); // 将起始位置加入队列
+	vis[start.x] = true; // 标记起始位置为已访问
+	while (!steps.empty()) { // 当队列不为空时，继续处理
+		now = steps.front(); // 获取队列的第一个元素
+		steps.pop(); // 将该元素从队列中移除
+		if (now.x == k) // 如果当前位置是奶牛的位置
+		{ 
+			printf("%d\n", now.step); // 输出到达奶牛所需的步数，并返回
+			return;
+		}
+
+		for (int i = 0; i < 3; i++) // 对于当前位置，考虑三种移动方式
+		{ 
+			if (i == 0) 
+				next.x = now.x + 1; // 向右走一步
+	
+			else if (i == 1) 
+				next.x = now.x - 1; // 向左走一步
+		
+			else if (i == 2)
+				next.x = now.x * 2; // 进行一次传送
+
+			if (next.x >= 0 && next.x < N && !vis[next.x])  // 如果新位置在范围内且未被访问过
+			{
+				vis[next.x] = true; // 标记新位置为已访问
+				next.step = now.step + 1; // 新位置的步数为当前位置步数加1
+				steps.push(next); // 将新位置加入队列
+			}
+		}
+	}
+}
+
+int main() 
+{
+	cin >> n >> k; // 输入Farmer John的起始位置和奶牛的位置
+	bfs(); // 调用BFS函数计算所需步数
+	return 0;
+}

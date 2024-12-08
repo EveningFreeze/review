@@ -1,0 +1,16 @@
+#include <iostream>
+using namespace std;
+
+int x, n, day, temp;
+
+int main() {
+    cin >> x >> n;
+    if (x == 6 || x == 7) n = n - (8 - x); // 如果是周末开始那么总天数要减去这周的无效天数，有可能是1天，也有可能是2天
+    else day = 6 - x, n = n - (2 + day); // 不是周日则要加上当前这周的有效天数，并且减去周六日
+
+    day += (n / 7) * 5; // 有多少周
+    temp = n % 7; // 最后的一周剩下多少天
+    day += (temp == 6 ? 5 : temp); // 只有余6的情况是没法直接相加的，单独判断
+    cout << day * 250; // 乘上每天可以游的距离就可以了
+    return 0;
+}

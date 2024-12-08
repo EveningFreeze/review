@@ -1,0 +1,44 @@
+#include <iostream>
+#include <iomanip>
+#define ll long long
+using namespace std;
+
+ll s[1000][1000];
+
+int main()
+{
+	int n, i = 1, j = 0, sum = 1;
+	cin >> n;
+	while (sum <= n * n)
+	{
+		while (s[i][++j] == 0 && j <= n)
+		{
+			s[i][j] = sum++;
+		}
+		j--;
+		while (s[++i][j] == 0 && i <= n)
+		{
+			s[i][j] = sum++;
+		}
+		i--;
+		while (s[i][--j] == 0 && j >= 1)
+		{
+			s[i][j] = sum++;
+		}
+		j++;
+		while (s[--i][j] == 0 && i >= 1)
+		{
+			s[i][j] = sum++;
+		}
+		i++;
+	}
+	for (i = 1; i <= n; i++)
+	{
+		for (j = 1; j <= n; j++)
+		{
+			cout << setw(3) << setfill(' ') << s[i][j];
+		}
+		cout << endl;
+	}
+	return 0;
+}

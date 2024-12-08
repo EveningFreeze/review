@@ -1,0 +1,45 @@
+#include <iostream> // 包含输入输出流的头文件
+#include <iomanip> // 包含设置输出格式的头文件
+#include <cmath> // 包含数学函数的头文件，这里用于计算平方根
+#include <algorithm> // 包含排序算法的头文件
+using namespace std; // 使用标准命名空间
+
+// 定义一个结构体node，用于存储点的坐标
+struct node {
+	int x, y, z; // 分别表示点的x、y、z坐标
+};
+
+// 定义一个比较函数，用于根据z坐标对点进行排序
+bool comparez(const node& a, const node& b) 
+{
+	return a.z < b.z; // 如果a的z坐标小于b的z坐标，那么a应该排在b前面
+}
+
+int main()
+{
+	int n; // 定义变量n，用于存储点的数量
+	cin >> n; // 输入点的数量
+	node no[n]; // 定义一个数组no，用于存储n个点的坐标
+	for (int i = 0; i < n; i++)
+	{
+		cin >> no[i].x >> no[i].y >> no[i].z; // 输入每个点的坐标
+	}
+
+	// 使用sort函数对点进行排序，排序的依据是z坐标
+	sort(no, no + n, comparez);
+
+	double distance = 0.0; // 定义变量distance，用于存储总距离
+	// 遍历排序后的点，计算每对连续点之间的欧几里得距离，并累加到distance中
+	for (int i = 0; i < n - 1; i++)
+	{
+		double disx = no[i + 1].x - no[i].x; // 计算x坐标的差值
+		double disy = no[i + 1].y - no[i].y; // 计算y坐标的差值
+		double disz = no[i + 1].z - no[i].z; // 计算z坐标的差值
+		// 计算欧几里得距离，并累加到distance中
+		distance += sqrt(disx * disx + disy * disy + disz * disz);
+	}
+
+	// 输出总距离，保留三位小数
+	cout << fixed << setprecision(3) << distance << "\n";
+	return 0; // 程序结束
+}

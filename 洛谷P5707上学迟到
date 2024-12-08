@@ -1,0 +1,27 @@
+#include <stdio.h>
+int main()
+{
+	int s = 0;
+	int v = 0;
+	int hour = 0;
+	int minute = 0;
+	scanf("%d %d", &s, &v);
+	if (s % v == 0)
+	{
+		minute = s / v + 10;
+	}
+	else
+	{
+		minute = s / v + 1 + 10;
+	}
+	int time = 8 * 60;
+	time = time - minute;//将具体时间换算成分钟
+	if (time < 0)
+	{
+		time += 24 * 60;
+	}
+	minute = time % 60;
+	hour = time / 60;
+	printf("%02d:%02d\n", hour, minute);
+	return 0;
+}

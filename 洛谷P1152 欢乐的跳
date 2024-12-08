@@ -1,0 +1,47 @@
+#include <iostream> // 包含输入输出流的头文件
+#include <cmath> // 包含数学函数的头文件，这里用于计算绝对值
+using namespace std; // 使用标准命名空间
+
+// 定义一个函数is_jolly，用于判断数组是否符合“欢乐的跳”
+bool is_jolly(int arr[], int n) 
+{
+	if (n == 1) return true; // 如果数组只有一个元素，那么它自然符合“欢乐的跳”的定义
+	bool count[n] = { false }; // 创建一个布尔数组count，用于记录1到n-1之间的每个整数是否作为差值出现过
+
+	// 遍历数组，计算每对连续元素之间的差的绝对值
+	for (int i = 0; i < n - 1; i++) 
+	{
+		int a = abs(arr[i + 1] - arr[i]); // 计算差的绝对值
+		if (a >= 1 && a <= n - 1) // 如果差的绝对值在1到n-1之间
+			count[a] = true; // 标记对应的count数组为true
+	}
+	// 检查count数组，确保1到n-1之间的所有整数都作为差值出现过
+	for (int i = 1; i < n; i++) 
+	{
+		if (!count[i]) // 如果某个值没有出现过
+			return false; // 数组不符合“欢乐的跳”的条件
+	}
+	return true; // 如果所有值都出现过，数组符合“欢乐的跳”的条件
+}
+
+int main()
+{
+	int n; // 定义变量n，用于存储数组的元素个数
+	int a[10000]; // 定义一个足够大的数组a，用于存储输入的整数
+
+	// 使用while循环来处理多组输入数据
+	while (cin >> n)
+	{
+		for (int i = 0; i < n; i++) 
+		{
+			cin >> a[i]; // 输入数组的元素
+		}
+
+		// 调用is_jolly函数判断数组是否符合“欢乐的跳”的条件，并输出结果
+		if (is_jolly(a, n))
+			cout << "Jolly" << endl; // 如果符合，输出"Jolly"
+		else
+			cout << "Not jolly" << endl; // 如果不符合，输出"Not jolly"
+	}
+	return 0; // 程序结束
+}

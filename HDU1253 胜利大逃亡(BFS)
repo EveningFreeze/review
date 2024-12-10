@@ -1,0 +1,107 @@
+#include <iostream>
+#include <queue>
+#include <cstdio>
+#include <cstring>
+
+using namespace std;
+
+// 定义六个方向的移动，分别对应前后左右上下六个方向
+const int N = 6;
+struct direct {
+    int dx; // x轴的移动量
+    int dy; // y轴的移动量
+    int dz; // z轴的移动量
+} direct[N] = {
+    {-1, 0, 0}, {1, 0, 0}, {0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}
+};
+
+// 定义迷宫的最大尺寸
+const int M = 52;
+int cube[M][M][M]; // 存储迷宫的布局，0代表路，1代表墙
+
+// 定义节点结构体，用于BFS队列
+struct node {
+    int x, y, z; // 节点的坐标
+    int level;   // 从起点到当前节点的步数
+};
+
+int L, R, C, limit; // 分别代表迷宫的长、宽、高和Ignatius逃离的时间限制
+node start;        // 起点
+
+// BFS函数，用于求解Ignatius逃离迷宫的最短路径
+int bfs() {
+    queue<node> q; // 定义队列
+
+    // 初始化起点坐标和步数
+    start.x = 1;
+    start.y = 1;
+    start.z = 1;
+    start.level = 0;
+    q.push(start);
+
+    // 将起点标记为已访问
+    cube[1][1][1] = 0;
+
+    while (!q.empty()) {
+        node front = q.front(); // 获取队列前端的节点
+        q.pop();               // 将节点从队列中移除
+
+        // 遍历六个方向
+        for (int i = 0; i < N; i++) {
+            int nextx = front.x + direct[i].dx; // 计算新坐标
+            int nexty = front.y + direct[i].dy;
+            int nextz = front.z + direct[i].dz;
+
+            // 如果新坐标是路且在迷宫范围内
+            if (cube[nextx][nexty][nextz]) {
+                // 如果到达出口
+                if (nextx == L && nexty == R && nextz == C)
+                    return front.level + 1;
+
+                // 如果步数小于限制且新坐标未被访问
+                if (front.level < limit) {
+                    cube[nextx][nexty][nextz] = 0; // 标记为已访问
+
+                    node v; // 定义新节点
+                    v.x = nextx;
+                    v.y = nexty;
+                    v.z = nextz;
+                    v.level = front.level + 1; // 更新步数
+                    q.push(v); // 将新节点加入队列
+                }
+            }
+        }
+    }
+
+    return -1; // 如果无法到达出口，返回-1
+}
+
+int main() {
+    int t, ans, i, j, k;
+
+    // 读取测试数据组数
+    scanf("%d", &t);
+    while (t--) {
+        // 读取迷宫的长、宽、高和Ignatius逃离的时间限制
+        scanf("%d%d%d%d", &L, &R, &C, &limit);
+
+        // 初始化迷宫布局，全部设置为墙（1）
+        memset(cube, 0, sizeof(cube));
+
+        // 读取迷宫的具体布局
+        for (i = 1; i <= L; i++)
+            for (j = 1; j <= R; j++)
+                for (k = 1; k <= C; k++) {
+                    scanf("%d", &cube[i][j][k]);
+                    cube[i][j][k] = 1 - cube[i][j][k]; // 将输入的布局转换为0为路，1为墙
+                }
+
+        // 调用BFS函数求解
+        ans = bfs();
+
+        // 输出结果
+        printf("%d\n", ans);
+    }
+
+    return 0;
+}
